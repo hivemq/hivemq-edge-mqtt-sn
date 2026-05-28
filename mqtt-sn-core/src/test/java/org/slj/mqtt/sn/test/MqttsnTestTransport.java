@@ -1,8 +1,5 @@
 /*
- * Copyright (c) 2021 Simon Johnson <simon622 AT gmail DOT com>
- *
- * Find me on GitHub:
- * https://github.com/simon622
+ * Copyright 2019-present HiveMQ GmbH
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
