@@ -36,9 +36,6 @@
 
     <artifactId>mqtt-sn-gateway-connector-aws-iotcore</artifactId>
 
-    <properties>
-        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -70,7 +67,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>${maven.build.shade.version}</version>
                 <executions>
                     <!-- Run shade goal on package phase -->
                     <execution>

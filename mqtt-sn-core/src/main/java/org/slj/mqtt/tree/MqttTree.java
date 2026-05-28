@@ -276,6 +276,10 @@ public class MqttTree<T> implements IMqttTree<T> {
                     if(from.length > 0){
                         searchChildren(wildpath, from, members);
                     } else {
+                        //a trailing single-level wildpath (eg. a/b/+) matches this final concrete level
+                        if(wildpath.isLeaf()){
+                            copyMembersNullSafe(members, wildpath);
+                        }
                         //weve run out of path segments BUT we have a wildpath so we need to ensure we dont have a sub forward
                         readWildpathAtNextLevel(wildpath, members, true);
                     }
