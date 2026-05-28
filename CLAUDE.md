@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A dependency-free, pure-Java implementation of MQTT-SN (MQTT for Small Things) supporting both protocol **version 1.2** and **version 2.0**. It provides a client, an aggregating/transparent gateway, codecs, cloud connectors, and load-testing tools. This is HiveMQ's fork of `simon622/mqtt-sn` (the `upstream` remote); the default branch is `master`.
+A dependency-free, pure-Java implementation of MQTT-SN (MQTT for Small Things) supporting both protocol **version 1.2** and **version 2.0**. It provides a client, an aggregating/transparent gateway, codecs, cloud connectors, and load-testing tools. This is HiveMQ's fork of `simon622/mqtt-sn` (the `upstream` remote), hosted at `hivemq/hivemq-edge-mqtt-sn`; the default branch is `master`.
 
 Java 8 is the source/target level (`maven.compiler.source/target = 1.8`) even though a newer JDK may be installed locally — keep new code Java-8 compatible.
 
@@ -36,9 +36,11 @@ Run a built jar: `java -jar <module>/target/<finalName>-<version>.jar <port> <ga
 
 ### Internal release (GitHub Actions)
 
-`.github/workflows/mqtt-sn-release.yml` ("Release MQTT-SN") publishes an internal HiveMQ build. It is **manually triggered** (`workflow_dispatch`) with a required `version` input (HiveMQ naming, e.g. `0.2.2-1+hivemq`). The job builds on Java 8 (temurin) and `mvn deploy`s **all** modules to GitHub Packages at `https://maven.pkg.github.com/hivemq/mqtt-sn` (auth via the built-in `GITHUB_TOKEN`).
+`.github/workflows/mqtt-sn-release.yml` ("Release MQTT-SN") publishes an internal HiveMQ build. It is **manually triggered** (`workflow_dispatch`) with a required `version` input (HiveMQ naming, e.g. `0.2.2-1+hivemq`). The job builds on Java 8 (temurin) and `mvn deploy`s **all** modules to this repo's GitHub Packages registry — `https://maven.pkg.github.com/${{ github.repository }}` (i.e. `hivemq/hivemq-edge-mqtt-sn`), auth via the built-in `GITHUB_TOKEN`.
 
-The workflow stamps the version in two steps, and **both are required**: `versions:set` rewrites the parent + child `<parent>` versions, and `versions:set-property -Dproperty=mqtt-sn.version` updates the `${mqtt-sn.version}` property. Inter-module dependencies (e.g. core→codec) resolve through that property, so changing the version without updating it breaks the reactor build. Keep this in mind whenever you bump or restructure versions.
+The workflow stamps the version in two steps, and **both are required**: `versions:set` rewrites the parent + child `<parent>` versions, and `versions:set-property -Dproperty=mqtt-sn.version` updates the `${mqtt-sn.version}` property. Inter-module dependencies (e.g. core→codec) resolve through that property, so changing the version without updating it breaks the reactor build. The `versions:set` step passes `-DprocessAllModules=true -DgroupId='*' -DartifactId='*' -DoldVersion='*'` because `mqtt-sn-codec` declares its own `org.mqtt-sn` groupId and its own `<version>` (distinct from the `org.slj` parent); without the wildcards its version is left unstamped and the other modules resolve a codec version that was never published. Keep this in mind whenever you bump or restructure versions.
+
+The `maven-deploy-plugin` version is pinned in the root `pom.xml` (`pluginManagement`, via the `maven-deploy-plugin.version` property) so the deploy step doesn't silently inherit whatever default the runner's Maven ships.
 
 ## Architecture
 
