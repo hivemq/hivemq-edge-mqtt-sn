@@ -1,0 +1,46 @@
+name: Release MQTT-SN
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version to build and publish (e.g. 0.2.2-1+hivemq)'
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Setup Java
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+      - uses: whelk-io/maven-settings-xml-action@9dc09b23833fa9aa7f27b63db287951856f3433d # v3.0.0
+        with:
+          servers: >
+            [
+              {
+                "id":"github",
+                "username":"${{ github.actor }}",
+                "password":"${{ secrets.GITHUB_TOKEN }}"
+              }
+            ]
+      - name: Set release version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          mvn --batch-mode versions:set -DnewVersion="$VERSION" -DgenerateBackupPoms=false
+          mvn --batch-mode versions:set-property -Dproperty=mqtt-sn.version -DnewVersion="$VERSION" -DgenerateBackupPoms=false
+      - name: Build and Publish
+        run: mvn --batch-mode clean deploy -DaltDeploymentRepository=github::https://maven.pkg.github.com/hivemq/mqtt-sn
