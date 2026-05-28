@@ -12,6 +12,9 @@ target/
 /mqtt-sn-gateway/mqtt-sn-gateway.iml
 /mqtt-sn-core-sec/mqtt-sn-core-sec.iml
 /mqtt-sn-core/mqtt-sn-core.iml
+/mqtt-sn-core/mqtt-sn-runtimes/mqtt-sn-race-test-concurrent/
+/mqtt-sn-core/mqtt-sn-runtimes/mqtt-sn-race-test-deterministic/
+/mqtt-sn-core/mqtt-sn-runtimes/mqtt-sn-race-test-threads/
 /mqtt-sn-codec/mqtt-sn-codec.iml
 /mqtt-sn-client/mqtt-sn-client.iml
 /mqtt-publisher/
@@ -45,3 +48,4 @@ mqtt-sn-client-sec/
 /mqtt-sn-runtimes/mqtt-sn-gateway/_message-queues-overflow/34643532633864362D323037652D346663342D386531342D333333653366646564646638
 /mqtt-sn-runtimes/
 /site
+.serena/

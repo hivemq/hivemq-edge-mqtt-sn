@@ -27,7 +27,9 @@ package org.slj.mqtt.sn.test.cases;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.slj.mqtt.sn.MqttsnConstants;
 import org.slj.mqtt.sn.impl.MqttsnFilesystemStorageService;
 import org.slj.mqtt.sn.model.IClientIdentifierContext;
@@ -51,11 +53,17 @@ public class SubscriptionTests {
     final static String TEST_SINGLE_WILDCARD_TOPIC = "test/+/topic";
     final static String TEST_MULTI_WILDCARD_TOPIC = "test/#";
 
+    //-- each test gets an isolated workspace: the runtime lock file (.lck) is only released on
+    //-- JVM exit, so a shared workspace would collide across test methods in the same surefire fork
+    @Rule
+    public TemporaryFolder workspaceRoot = new TemporaryFolder();
+
     private MqttsnTestRuntime runtime;
 
     @Before
     public void setup() throws MqttsnException {
-        MqttsnFilesystemStorageService storageService = new MqttsnFilesystemStorageService("mqtt-sn-test");
+        MqttsnFilesystemStorageService storageService =
+                new MqttsnFilesystemStorageService(workspaceRoot.getRoot(), "mqtt-sn-test");
         MqttsnTestRuntimeRegistry registry =
                 MqttsnTestRuntimeRegistry.defaultConfiguration(storageService, MqttsnTestRuntime.TEST_OPTIONS, false);
         runtime = new MqttsnTestRuntime();
@@ -64,10 +72,12 @@ public class SubscriptionTests {
 
     @After
     public void tearDown() throws MqttsnException, IOException {
-        try {
-            runtime.stop();
-        } finally {
-            runtime.close();
+        if (runtime != null) {
+            try {
+                runtime.stop();
+            } finally {
+                runtime.close();
+            }
         }
     }
 

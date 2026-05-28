@@ -26,6 +26,7 @@ package org.slj.mqtt.sn.cloud.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slj.mqtt.sn.cloud.IMqttsnCloudService;
 import org.slj.mqtt.sn.cloud.MqttsnCloudServiceException;
@@ -43,6 +44,7 @@ public class HttpCloudClientTest {
         return new ObjectMapper();
     }
 
+    @Ignore("depends on the live external mqtt-sn.cloud service, which is unavailable in CI")
     @Test
     public void testServiceDiscovery() throws MqttsnCloudServiceException {
         IMqttsnCloudService cloudService =
@@ -50,6 +52,7 @@ public class HttpCloudClientTest {
         Assert.assertEquals("cloud service should contain x2 service defintions", 2, cloudService.getConnectedServiceCount());
     }
 
+    @Ignore("depends on the live external mqtt-sn.cloud service, which is unavailable in CI")
     @Test
     public void testSecureServiceDiscovery() throws MqttsnCloudServiceException {
         IMqttsnCloudService cloudService =
@@ -85,6 +88,7 @@ public class HttpCloudClientTest {
         cloudService.getConnectedServiceCount();
     }
 
+    @Ignore("depends on the live external mqtt-sn.cloud service, which is unavailable in CI")
     @Test
     public void testConnectorListing() throws MqttsnCloudServiceException {
         IMqttsnCloudService cloudService =

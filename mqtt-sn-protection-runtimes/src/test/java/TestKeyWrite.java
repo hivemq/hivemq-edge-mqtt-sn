@@ -1,3 +1,4 @@
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slj.mqtt.sn.utils.Files;
 
@@ -28,6 +29,7 @@ public class TestKeyWrite {
     static byte[] clientProtectionKeyAes128 = new byte[] {
             (byte)0x8d,(byte)0x8c,(byte)0x0e,(byte)0x21,(byte)0x13,(byte)0x61,(byte)0x00,(byte)0x52,(byte)0x15,(byte)0xe9,(byte)0x02,(byte)0xcd,(byte)0xfa,(byte)0x4b,(byte)0x1e,(byte)0x0b};
 
+    @Ignore("developer utility: writes key files to a hardcoded absolute path that only exists on the original author's machine")
     @Test
     public void writeClientProtectionAes256() throws IOException {
 

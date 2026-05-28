@@ -49,6 +49,7 @@ public class MqttsnTestRuntimeRegistry extends AbstractMqttsnRuntimeRegistry {
                 withWillRegistry(new MqttsnInMemoryWillRegistry()).
                 withMessageQueue(new MqttsnInMemoryMessageQueue()).
                 withContextFactory(new MqttsnContextFactory()).
+                withTransport(new MqttsnTestTransport()).
                 withSecurityService(new MqttsnSecurityService()).
                 withSessionRegistry(new MqttsnSessionRegistry()).
                 withTopicModifier(new MqttsnDefaultTopicModifier()).
